@@ -66,8 +66,7 @@ namespace ChartDemo.ViewModels
                 });
             });
 
-            if (!_isInitialize)
-                _timer.Start();
+            _timer.Start();
 
             _isInitialize = true;
         }

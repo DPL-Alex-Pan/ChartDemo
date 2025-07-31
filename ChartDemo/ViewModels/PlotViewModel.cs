@@ -43,7 +43,8 @@ namespace ChartDemo.ViewModels
 
                 Plot.Refresh();
             }
-            if(!_isInit)
+            
+            if(_isInit == false)
                 Plot.Plot.Axes.AutoScaleX();
 
             _isInit = true;
