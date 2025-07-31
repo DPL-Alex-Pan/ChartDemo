@@ -3,42 +3,40 @@
         xmlns:vm="using:ChartDemo.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:ScottPlot="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ChartDemo.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="ChartDemo">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
 
-	<Grid RowDefinitions="50, 25, *"
-		  ColumnDefinitions="200, 50">
-		<StackPanel Grid.Row="0"
-    	            Orientation="Horizontal"
-					Spacing="10">
-            <TextBlock Text="{Binding Greeting}" 
-					   HorizontalAlignment="Center" 
-					   VerticalAlignment="Center"
-					   Width="200"/>
-			<Button Content="Init"
-					Command="{Binding InitCommand}" />
-			</StackPanel>
-		<StackPanel Grid.Row="1"
-    	            Orientation="Horizontal"
-					Spacing="10">
-		<TextBox Text="DEf" 
-				 TextAlignment="Center" 
-				 AcceptsTab="True"
-				 Name="_text"
-				 TextWrapping="NoWrap" Width="200"/>
-			<Button Content="Send" 
+	<Grid RowDefinitions="42, *">
+	
+		<Border Margin="0 0 0 4"
+				BorderBrush="Aquamarine"
+				BorderThickness="1">
+			<StackPanel Orientation="Horizontal" Spacing="5">
+			<!--<Button Content="Init"
+					Command="{Binding InitCommand}"
+					CommandParameter="data"/>-->
+			<Button Content="Run"
 					Command="{Binding SendCommand}" 
-					CommandParameter="{Binding #_text.Text}"/>
-		</StackPanel>
+					CommandParameter="data"/>
+			</StackPanel>
+		</Border>
+
+		<Panel Grid.Row="1">
+			<Border BorderBrush="AliceBlue"
+					BorderThickness="1">
+				<ScottPlot:AvaPlot Name="AvaPlot" />
+			</Border>
+		</Panel>
 	</Grid>
 
 </Window>

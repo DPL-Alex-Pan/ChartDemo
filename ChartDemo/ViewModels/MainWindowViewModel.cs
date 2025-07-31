@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace ChartDemo.ViewModels
 {
@@ -12,7 +13,7 @@ namespace ChartDemo.ViewModels
     {
         private readonly IServiceProvider? _provider;
         private readonly IWsServiceProvider _wsProvider;
-
+        Timer  _timer = new(TimeSpan.FromMilliseconds(50));
         public MainWindowViewModel()
         {
             
@@ -20,6 +21,8 @@ namespace ChartDemo.ViewModels
 
         [ObservableProperty]
         private string greeting = "Welcome to Avalonia!";
+        private bool _isInitialize;
+
         public MainWindowViewModel(IServiceProvider provider)
         {
             _provider = provider;
@@ -29,33 +32,46 @@ namespace ChartDemo.ViewModels
                     ?? throw new ArgumentNullException(nameof(_wsProvider));
             }
             
+            _timer.Elapsed += async (s, e) =>
+            {
+                await SendMessage("data");
+            };
         }
 
-        [RelayCommand]
-        private async Task Init()
-        {
-            await Initialize();
-        }
-
+        
         [RelayCommand]
         private async Task Send(string message)
         {
+            await Initialize();
             await SendMessage(message);
         }
 
         public async Task SendMessage(string message)
             => await _wsProvider.Send(message);
+
         public async Task Initialize()
         {
-            if (_wsProvider is null) return;
+            if (_wsProvider is null || _isInitialize ) return;
 
             await _wsProvider.Provide("ws://localhost:8080/ws/", (message) =>
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    Greeting = message;
+                    if(message is string textMessage)
+                        Greeting = textMessage;
+                    else if (message is double[] array)
+                    {
+                        PlotModel.PlotData = array;
+                    }
                 });
             });
+
+            if (!_isInitialize)
+                _timer.Start();
+
+            _isInitialize = true;
         }
+
+        public PlotViewModel PlotModel { get; } = new PlotViewModel();
     }
 }

@@ -5,7 +5,7 @@ namespace ChartDemo.Models
 {
     public interface IWsServiceProvider
     {
-        Task Provide(string wsConnection, Action<string> func);
+        Task Provide(string wsConnection, Action<object> func);
         Task Send(string message);
     }
 }

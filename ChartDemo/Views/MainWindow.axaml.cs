@@ -1,5 +1,6 @@
+using Avalonia;
 using Avalonia.Controls;
-using ChartDemo.Models;
+using ChartDemo.ViewModels;
 using System;
 
 namespace ChartDemo.Views
@@ -10,6 +11,13 @@ namespace ChartDemo.Views
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        protected override void OnDataContextChanged(EventArgs e)
+        {
+            var dc = (MainWindowViewModel)DataContext;
+            dc.PlotModel.Plot = this.AvaPlot;
+            base.OnDataContextChanged(e);
         }
     }
 }
